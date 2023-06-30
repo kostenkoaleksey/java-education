@@ -2,7 +2,9 @@ package collections;
 
 import java.util.*;
 
-
+/**
+ * Implementation of the List interface.
+ */
 public class MyList implements List {
     private Object[] elements;
     private int size;
@@ -26,7 +28,7 @@ public class MyList implements List {
     }
 
     /**
-     * Retrieves the size of the list.
+     * Returns the size of the list.
      *
      * @return
      */
@@ -69,7 +71,7 @@ public class MyList implements List {
     }
 
     /**
-     * Retrieves the iterator over the list.
+     * Returns the iterator over the list.
      *
      * @return {@code Iterator}
      */
@@ -78,7 +80,7 @@ public class MyList implements List {
     }
 
     /**
-     * Returns the array of collection's elements.
+     * Returns the array of elements in the list.
      *
      * @return
      */
@@ -87,10 +89,12 @@ public class MyList implements List {
     }
 
     /**
+     * Returns given array with current list's elements.
+     *
      * @param a the array into which the elements of this list are to
      *          be stored, if it is big enough; otherwise, a new array of the
      *          same runtime type is allocated for this purpose.
-     * @return
+     * @return The list's elements of given array type.
      */
     public Object[] toArray(Object[] a) {
         if (a.length < size) {
@@ -105,6 +109,8 @@ public class MyList implements List {
 
     /**
      * Appends a new element into the list.
+     * <p>
+     * The element will be added to the end of the list.
      *
      * @param o element whose presence in this collection is to be ensured
      * @return {@code true}
@@ -118,7 +124,13 @@ public class MyList implements List {
         return true;
     }
 
-    @Override
+    /**
+     * Appends an element into the list with given index.
+     *
+     * @param index   index at which the specified element is to be inserted
+     * @param element element to be inserted
+     * @throws IndexOutOfBoundsException When index is out of the list.
+     */
     public void add(int index, Object element) {
         Objects.checkIndex(index, size);
         if (size == elements.length) {
@@ -129,7 +141,14 @@ public class MyList implements List {
         size += 1;
     }
 
-    @Override
+    /**
+     * Appends a collection into the list.
+     * <p>
+     * The collection will be added to the end of the list.
+     *
+     * @param c collection containing elements to be added to this collection
+     * @return {@code true} when the collection added successfully.
+     */
     public boolean addAll(Collection c) {
         if (c.isEmpty()) {
             return false;
@@ -143,7 +162,17 @@ public class MyList implements List {
         return true;
     }
 
-    @Override
+    /**
+     * Appends a collection into the list by given index.
+     * <p>
+     * The collection will be added starting given index.
+     *
+     * @param index index at which to insert the first element from the
+     *              specified collection
+     * @param c     collection containing elements to be added to this list
+     * @return {@code true} when collection is successfully added.
+     * @throws IndexOutOfBoundsException When index is out of the list.
+     */
     public boolean addAll(int index, Collection c) {
         Objects.checkIndex(index, size);
         if (c.isEmpty()) {
@@ -163,7 +192,12 @@ public class MyList implements List {
         return true;
     }
 
-    @Override
+    /**
+     * Removes element of collection which is equal to given one.
+     *
+     * @param o element to be removed from this list, if present
+     * @return {@code true} when corresponding object is removed out of the list.
+     */
     public boolean remove(Object o) {
         int indexToRemove = indexOf(o);
         boolean hasElement = indexToRemove > -1;
@@ -173,7 +207,13 @@ public class MyList implements List {
         return hasElement;
     }
 
-    @Override
+    /**
+     * Removes en element of the list by given index.
+     *
+     * @param index the index of the element to be removed
+     * @return {@code Object} the element that has been removed.
+     * @throws IndexOutOfBoundsException When index is out of the list.
+     */
     public Object remove(int index) {
         Object oldValue = elements[Objects.checkIndex(index, size)];
         int newSize = size - 1;
@@ -186,7 +226,12 @@ public class MyList implements List {
         return oldValue;
     }
 
-    @Override
+    /**
+     * Removes the list elements which are in the given collection.
+     *
+     * @param c collection containing elements to be removed from this list
+     * @return {@code true} when there was removed at least one element.
+     */
     public boolean removeAll(Collection c) {
         boolean results = false;
         for (Object o : c) {
@@ -195,7 +240,12 @@ public class MyList implements List {
         return results;
     }
 
-    @Override
+    /**
+     * Remove the list elements that are not presented in the given collection.
+     *
+     * @param c collection containing elements to be retained in this list
+     * @return {@code true} when there was deleted at least one element.
+     */
     public boolean retainAll(Collection c) {
         boolean results = false;
         Object[] localElements = toArray();
@@ -210,7 +260,11 @@ public class MyList implements List {
         return results;
     }
 
-    @Override
+    /**
+     * Remove the list elements.
+     * <p>
+     * Makes the list empty.
+     */
     public void clear() {
         for (int i = 0; i < size; i++) {
             elements[i] = null;
@@ -218,19 +272,39 @@ public class MyList implements List {
         size = 0;
     }
 
-    @Override
+    /**
+     * Retrieve the list element by given index.
+     *
+     * @param index index of the element to return
+     * @return {@code Object} An element found by given index.
+     * @throws IndexOutOfBoundsException when index is out of the list.
+     */
     public Object get(int index) {
         return elements[Objects.checkIndex(index, size)];
     }
 
-    @Override
+    /**
+     * Replaces the list element with given one by given index.
+     *
+     * @param index   index of the element to replace
+     * @param element element to be stored at the specified position
+     * @return {@code Object} previous element.
+     * @throws IndexOutOfBoundsException When index is out of the list.
+     */
     public Object set(int index, Object element) {
         Object oldValue = elements[Objects.checkIndex(index, size)];
         elements[index] = element;
         return oldValue;
     }
 
-    @Override
+    /**
+     * Returns an index of the list's element which equals given object.
+     * <p>
+     * Search starting the beginning of the list.
+     *
+     * @param o element to search for
+     * @return {@code -1} when given object was not found in the list.
+     */
     public int indexOf(Object o) {
         if (!isEmpty()) {
             for (int i = 0; i < size; i++) {
@@ -242,7 +316,14 @@ public class MyList implements List {
         return -1;
     }
 
-    @Override
+    /**
+     * Returns an index of the list's element which equals given object.
+     * <p>
+     * Search starting the end of the list.
+     *
+     * @param o element to search for
+     * @return {@code -1} when given object was not found in the list.
+     */
     public int lastIndexOf(Object o) {
         if (!isEmpty()) {
             for (int i = size - 1; i >= 0; i--) {
@@ -254,17 +335,33 @@ public class MyList implements List {
         return -1;
     }
 
-    @Override
+    /**
+     * Returns a list iterator.
+     *
+     * @return list iterator.
+     */
     public ListIterator listIterator() {
         return new MyListIterator(elements);
     }
 
-    @Override
+    /**
+     * Returns a list iterator pointed to the element with given index.
+     *
+     * @param index index of the first element to be returned from the
+     *              list iterator (by a call to {@link ListIterator#next next})
+     * @return list iterator pointed to corresponding index.
+     */
     public ListIterator listIterator(int index) {
         return new MyListIterator(elements, index);
     }
 
-    @Override
+    /**
+     * Returns the sub list with elements in range of given indexes.
+     *
+     * @param fromIndex low endpoint (inclusive) of the subList
+     * @param toIndex   high endpoint (exclusive) of the subList
+     * @return Sub list.
+     */
     public List subList(int fromIndex, int toIndex) {
         return new MySubList(this, fromIndex, toIndex);
     }
@@ -285,6 +382,14 @@ public class MyList implements List {
         elements = Arrays.copyOf(elements, prepareLength(size + sizeToIncrease));
     }
 
+    /**
+     * Returns the length which is in the Integer range.
+     * <p>
+     * Ensures whether given length is in the range of Integer.
+     *
+     * @param length
+     * @return {@code Integer.MAX_VALUE} when given length greater than the Integer.
+     */
     private int prepareLength(int length) {
         return Math.min(length, Integer.MAX_VALUE);
     }
