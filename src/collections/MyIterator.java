@@ -6,16 +6,16 @@ import java.util.NoSuchElementException;
 /**
  * Implementation of the Iterator interface.
  */
-public class MyIterator implements Iterator {
+public class MyIterator<E> implements Iterator<E> {
     protected int current;
-    protected Object[] elements;
+    protected E[] elements;
 
     /**
      * Constructor.
      *
      * @param elements The list of elements for iteration.
      */
-    public MyIterator(Object[] elements) {
+    public MyIterator(E[] elements) {
         this.elements = elements;
     }
 
@@ -35,12 +35,12 @@ public class MyIterator implements Iterator {
      *
      * @return current element of iterator.
      */
-    public Object next() {
+    public E next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
 
-        Object currentElement = elements[current];
+        E currentElement = elements[current];
         current += 1;
 
         return currentElement;
