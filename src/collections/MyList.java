@@ -5,8 +5,8 @@ import java.util.*;
 /**
  * Implementation of the List interface.
  */
-public class MyList implements List {
-    private Object[] elements;
+public class MyList<E> implements List<E> {
+    private E[] elements;
     private int size;
 
     /**
@@ -15,7 +15,7 @@ public class MyList implements List {
      * @param capacity Initial capacity of the list.
      */
     public MyList(int capacity) {
-        this.elements = new Object[capacity];
+        this.elements = (E[]) new Object[capacity];
     }
 
     /**
@@ -96,9 +96,9 @@ public class MyList implements List {
      *          same runtime type is allocated for this purpose.
      * @return The list's elements of given array type.
      */
-    public Object[] toArray(Object[] a) {
+    public <T> T[] toArray(T[] a) {
         if (a.length < size) {
-            return (Object[]) Arrays.copyOf(elements, size, a.getClass());
+            return (T[]) Arrays.copyOf(elements, size, a.getClass());
         }
         System.arraycopy(elements, 0, a, 0, size);
         if (a.length > size) {
@@ -115,7 +115,7 @@ public class MyList implements List {
      * @param o element whose presence in this collection is to be ensured
      * @return {@code true}
      */
-    public boolean add(Object o) {
+    public boolean add(E o) {
         if (size == elements.length) {
             increaseListCapacity();
         }
@@ -131,7 +131,7 @@ public class MyList implements List {
      * @param element element to be inserted
      * @throws IndexOutOfBoundsException When index is out of the list.
      */
-    public void add(int index, Object element) {
+    public void add(int index, E element) {
         Objects.checkIndex(index, size);
         if (size == elements.length) {
             increaseListCapacity();
@@ -214,8 +214,8 @@ public class MyList implements List {
      * @return {@code Object} the element that has been removed.
      * @throws IndexOutOfBoundsException When index is out of the list.
      */
-    public Object remove(int index) {
-        Object oldValue = elements[Objects.checkIndex(index, size)];
+    public E remove(int index) {
+        E oldValue = elements[Objects.checkIndex(index, size)];
         int newSize = size - 1;
         if (newSize >= index) {
             System.arraycopy(elements, index + 1, elements, index, newSize - index);
@@ -279,7 +279,7 @@ public class MyList implements List {
      * @return {@code Object} An element found by given index.
      * @throws IndexOutOfBoundsException when index is out of the list.
      */
-    public Object get(int index) {
+    public E get(int index) {
         return elements[Objects.checkIndex(index, size)];
     }
 
@@ -291,8 +291,8 @@ public class MyList implements List {
      * @return {@code Object} previous element.
      * @throws IndexOutOfBoundsException When index is out of the list.
      */
-    public Object set(int index, Object element) {
-        Object oldValue = elements[Objects.checkIndex(index, size)];
+    public E set(int index, E element) {
+        E oldValue = elements[Objects.checkIndex(index, size)];
         elements[index] = element;
         return oldValue;
     }
@@ -340,8 +340,8 @@ public class MyList implements List {
      *
      * @return list iterator.
      */
-    public ListIterator listIterator() {
-        return new MyListIterator(elements);
+    public ListIterator<E> listIterator() {
+        return new MyListIterator<E>(elements);
     }
 
     /**
@@ -351,8 +351,8 @@ public class MyList implements List {
      *              list iterator (by a call to {@link ListIterator#next next})
      * @return list iterator pointed to corresponding index.
      */
-    public ListIterator listIterator(int index) {
-        return new MyListIterator(elements, index);
+    public ListIterator<E> listIterator(int index) {
+        return new MyListIterator<E>(elements, index);
     }
 
     /**
@@ -362,8 +362,8 @@ public class MyList implements List {
      * @param toIndex   high endpoint (exclusive) of the subList
      * @return Sub list.
      */
-    public List subList(int fromIndex, int toIndex) {
-        return new MySubList(this, fromIndex, toIndex);
+    public List<E> subList(int fromIndex, int toIndex) {
+        return new MySubList<E>(this, fromIndex, toIndex);
     }
 
     /**

@@ -6,13 +6,13 @@ import java.util.NoSuchElementException;
 /**
  * Implementation the ListIterator interface.
  */
-public class MyListIterator extends MyIterator implements ListIterator {
+public class MyListIterator<E> extends MyIterator<E> implements ListIterator<E> {
     /**
      * Constructor.
      *
      * @param elements array of elements for iteration.
      */
-    public MyListIterator(Object[] elements) {
+    public MyListIterator(E[] elements) {
         super(elements);
         current = 0;
     }
@@ -23,7 +23,7 @@ public class MyListIterator extends MyIterator implements ListIterator {
      * @param elements array of elements for iteration.
      * @param index index of element to start from.
      */
-    public MyListIterator(Object[] elements, int index) {
+    public MyListIterator(E[] elements, int index) {
         super(elements);
         current = index;
     }
@@ -52,7 +52,7 @@ public class MyListIterator extends MyIterator implements ListIterator {
      * @return previous element.
      * @throws NoSuchElementException When index is out of iterator range.
      */
-    public Object previous() {
+    public E previous() {
         int index = current - 1;
         if (index < 0) {
             throw new NoSuchElementException();

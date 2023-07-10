@@ -12,7 +12,7 @@ public class Main {
         list.add(11);
         list.add(12);
 
-        MyList collection = new MyList(1);
+        MyList<Integer> collection = new MyList(1);
         collection.add(2);
         collection.add(1);
         collection.add(3);
