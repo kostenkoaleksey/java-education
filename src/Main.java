@@ -1,4 +1,5 @@
 import collections.MyList;
+import collections.linkedlist.MyLinkedList;
 
 import java.util.ArrayList;
 import java.lang.Integer;
@@ -12,7 +13,8 @@ public class Main {
         list.add(11);
         list.add(12);
 
-        MyList<Integer> collection = new MyList(1);
+//        MyList<Integer> collection = new MyList(1);
+        MyLinkedList<Integer> collection = new MyLinkedList<Integer>();
         collection.add(2);
         collection.add(1);
         collection.add(3);
@@ -22,6 +24,7 @@ public class Main {
         System.out.println("First index of 4: " + collection.indexOf(4));
         System.out.println("Last index of 4: " + collection.lastIndexOf(4));
         System.out.println("Collection contains 5: " + collection.contains(5));
+        System.out.println("Collection contains 3: " + collection.contains(3));
         System.out.println("Collection contains the list: " + collection.containsAll(list));
 
         collection.remove(0);
@@ -42,7 +45,7 @@ public class Main {
         // End manipulations with sublist
 
 //        collection.retainAll(list);
-//        collection.removeAll(list);
+        collection.removeAll(list);
 
         System.out.println("Get element with index 0: " + collection.get(0));
         System.out.println("Set element with index 1: " + collection.set(1, -11));
@@ -52,8 +55,8 @@ public class Main {
         }
 
         // Start manipulations with ListIterator of the collection
-        ListIterator listIterator = collection.listIterator(1);
-        System.out.println(listIterator.previous());
+//        ListIterator listIterator = collection.listIterator(1);
+//        System.out.println(listIterator.previous());
         // End manipulations with ListIterator of the collection
     }
 }
