@@ -199,12 +199,15 @@ public class MyList<E> implements List<E> {
      * @return {@code true} when corresponding object is removed out of the list.
      */
     public boolean remove(Object o) {
-        int indexToRemove = indexOf(o);
-        boolean hasElement = indexToRemove > -1;
-        if (hasElement) {
-            remove(indexToRemove);
+        boolean results = false;
+        for (int i = size - 1; i >= 0; i--) {
+            if (o.equals(elements[i])) {
+                remove(i);
+                results = true;
+            }
         }
-        return hasElement;
+
+        return results;
     }
 
     /**
