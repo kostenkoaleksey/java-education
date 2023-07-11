@@ -54,7 +54,7 @@ final public class MyLinkedList<E> implements List<E> {
      * @return {@code -1} when match is not found.
      */
     public boolean contains(Object o) {
-        return indexOf(0) != -1;
+        return indexOf(o) != -1;
     }
 
     /**
@@ -137,6 +137,7 @@ final public class MyLinkedList<E> implements List<E> {
         lastNode.setNext(newNode);
 
         last = newNode;
+        first.setPrev(last);
         size += 1;
         return true;
     }
@@ -189,7 +190,7 @@ final public class MyLinkedList<E> implements List<E> {
 
         Node<E> currentNode = getNode(index);
         for (E element : c) {
-            currentNode = append(currentNode, element);
+            append(currentNode, element);
         }
 
         return true;
@@ -202,15 +203,17 @@ final public class MyLinkedList<E> implements List<E> {
      * @return {@code true} when corresponding object is removed out of the list.
      */
     public boolean remove(Object o) {
-        Node<E> currentNode = first;
-        for (int i = 0; i < size; i++) {
+        boolean results = false;
+
+        Node<E> currentNode = last;
+        for (int i = size - 1; i >= 0; i--) {
             if (o.equals(currentNode.getValue())) {
                 removeNode(currentNode);
-                return true;
+                results = true;
             }
-            currentNode = currentNode.getNext();
+            currentNode = currentNode.getPrev();
         }
-        return false;
+        return results;
     }
 
     /**
@@ -232,6 +235,7 @@ final public class MyLinkedList<E> implements List<E> {
      */
     public boolean removeAll(Collection<?> c) {
         boolean results = false;
+
         for (Object o : c) {
             results = remove(o) || results;
         }
