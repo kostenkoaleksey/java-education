@@ -6,7 +6,7 @@ import collections.MySubList;
 
 import java.util.*;
 
-final public class MyLinkedList<E> implements List<E> {
+final public class MyLinkedList<E> implements DoubleEndedList<E> {
     private int size;
 
     private Node<E> first;
@@ -117,7 +117,7 @@ final public class MyLinkedList<E> implements List<E> {
     }
 
     /**
-     * Adds new element into the list.
+     * Adds new element into the end of the list.
      *
      * @param e element whose presence in this collection is to be ensured
      * @return {@code true} when the list has to be changed.
@@ -433,5 +433,39 @@ final public class MyLinkedList<E> implements List<E> {
         size += 1;
 
         return newNode;
+    }
+
+    /**
+     * Adds new element into the head of the list.
+     *
+     * @param element The element to insert into the list.
+     * @return {@code true} when elements has been added successfully.
+     */
+    public boolean pushToHead(E element) {
+        Node<E> newNode = new Node<>(element);
+        newNode.setPrev(last);
+        newNode.setNext(first);
+        first.setPrev(newNode);
+        first = newNode;
+        size += 1;
+        return false;
+    }
+
+    /**
+     * Returns the first list's element.
+     *
+     * @return {@code null} when list is empty.
+     */
+    public E getFirst() {
+        return isEmpty() ? null : first.getValue();
+    }
+
+    /**
+     * Returns the last list's element.
+     *
+     * @return {@code null} when list is empty.
+     */
+    public E getLast() {
+        return isEmpty() ? null : last.getValue();
     }
 }
