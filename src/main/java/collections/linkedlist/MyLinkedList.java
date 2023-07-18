@@ -4,6 +4,7 @@ import collections.MyIterator;
 import collections.MyListIterator;
 import collections.MySubList;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 final public class MyLinkedList<E> implements DoubleEndedList<E> {
@@ -78,7 +79,7 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
      * @return {@code Iterator}
      */
     public Iterator<E> iterator() {
-        return new MyIterator<E>(toArray());
+        return new MyIterator<E>((E[]) toArray());
     }
 
     /**
@@ -86,7 +87,7 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
      *
      * @return array of the list elements.
      */
-    public E[] toArray() {
+    public Object[] toArray() {
         E[] list = (E[]) new Object[size];
         Node<E> currentNode = first;
         for (int i = 0; i < size; i++) {
@@ -105,7 +106,7 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
      * @return The list's elements of given array type.
      */
     public <T> T[] toArray(T[] a) {
-        E[] elements = toArray();
+        E[] elements = (E[]) toArray();
         if (a.length < size) {
             return (T[]) Arrays.copyOf(elements, size, a.getClass());
         }
@@ -250,7 +251,7 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
      */
     public boolean retainAll(Collection<?> c) {
         boolean results = false;
-        E[] localElements = toArray();
+        E[] localElements = (E[]) toArray();
         for (int i = 0; i < localElements.length; i++) {
             if (!c.contains(localElements[i])) {
                 results = remove(localElements[i]) || results;
@@ -344,7 +345,7 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
      * @return list iterator.
      */
     public ListIterator<E> listIterator() {
-        return new MyListIterator<E>(toArray());
+        return new MyListIterator<E>((E[]) toArray());
     }
 
     /**
@@ -355,7 +356,7 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
      * @return list iterator pointed to corresponding index.
      */
     public ListIterator<E> listIterator(int index) {
-        return new MyListIterator<E>(toArray(), index);
+        return new MyListIterator<E>((E[]) toArray(), index);
     }
 
     /**
@@ -395,6 +396,13 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
      */
     private E removeNode(Node<E> node) {
         E oldValue = node.getValue();
+
+        if (size == 1) {
+            first = last = null;
+            size = 0;
+            return oldValue;
+        }
+
         Node<E> prevNode = node.getPrev();
         Node<E> nextNode = node.getNext();
 
@@ -405,7 +413,6 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
         } else if (last.equals(node)) {
             last = prevNode;
         }
-        node = null;
         size -= 1;
 
         return oldValue;
