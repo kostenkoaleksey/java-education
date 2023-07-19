@@ -198,23 +198,28 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
     }
 
     /**
-     * Removes element of collection which is equal to given one.
+     * Removes the first occurrence of the specified element from this list.
      *
      * @param o element to be removed from this list, if present
      * @return {@code true} when corresponding object is removed out of the list.
      */
     public boolean remove(Object o) {
-        boolean results = false;
+        if (isEmpty()) {
+            return false;
+        }
 
-        Node<E> currentNode = last;
-        for (int i = size - 1; i >= 0; i--) {
+        Node<E> currentNode = first;
+        int i = 0;
+        while (currentNode != null && size > i) {
+            i++;
             if (o.equals(currentNode.getValue())) {
                 removeNode(currentNode);
-                results = true;
+                return true;
             }
-            currentNode = currentNode.getPrev();
+            currentNode = currentNode.getNext();
         }
-        return results;
+
+        return false;
     }
 
     /**
@@ -356,6 +361,7 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
      * @return list iterator pointed to corresponding index.
      */
     public ListIterator<E> listIterator(int index) {
+        Objects.checkIndex(index, size);
         return new MyListIterator<E>((E[]) toArray(), index);
     }
 
@@ -367,6 +373,9 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
      * @return Sub list.
      */
     public List<E> subList(int fromIndex, int toIndex) {
+        if (fromIndex < 0 || toIndex > size || fromIndex > toIndex) {
+            throw new IndexOutOfBoundsException();
+        }
         return new MySubList<E>(this, fromIndex, toIndex);
     }
 
@@ -455,7 +464,7 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
         first.setPrev(newNode);
         first = newNode;
         size += 1;
-        return false;
+        return true;
     }
 
     /**
