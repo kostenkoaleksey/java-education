@@ -242,9 +242,19 @@ final public class MyLinkedList<E> implements DoubleEndedList<E> {
     public boolean removeAll(Collection<?> c) {
         boolean results = false;
 
-        for (Object o : c) {
-            results = remove(o) || results;
+        if (c.isEmpty()) {
+            return results;
         }
+
+        Iterator<E> iterator = iterator();
+        while (iterator.hasNext()) {
+            E current = iterator.next();
+            if (c.contains(current)) {
+                remove(current);
+                results = true;
+            }
+        }
+
         return results;
     }
 
