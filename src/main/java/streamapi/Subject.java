@@ -1,13 +1,12 @@
 package streamapi;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NonNull;
 
-@AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class Subject {
+    @NonNull
     private int id;
+    @NonNull
     private String title;
 }

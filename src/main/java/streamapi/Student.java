@@ -1,16 +1,24 @@
 package streamapi;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@AllArgsConstructor
-@Getter
-@Setter
+import java.util.Map;
+
+@Data
 public class Student {
+    @NonNull
     private int id;
+    @NonNull
     private String firstName;
+    @NonNull
     private String lastName;
-    private short age;
-    private String sex;
+    @NonNull
+    private int age;
+    @NonNull
+    private Sex sex;
+    private Map<Subject, Integer> marks;
+    public enum Sex {
+        MALE,
+        FEMALE;
+    }
 }

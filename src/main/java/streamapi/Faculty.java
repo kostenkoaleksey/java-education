@@ -1,13 +1,15 @@
 package streamapi;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NonNull;
 
-@Getter
-@Setter
-@AllArgsConstructor
+import java.util.List;
+
+@Data
 public class Faculty {
+    @NonNull
     private int id;
+    @NonNull
     private String title;
+    private List<Group> groups;
 }
