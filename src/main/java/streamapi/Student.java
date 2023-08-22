@@ -1,22 +1,18 @@
 package streamapi;
 
-import lombok.*;
+import lombok.Data;
 
 import java.util.Map;
 
 @Data
 public class Student {
-    @NonNull
-    private int id;
-    @NonNull
-    private String firstName;
-    @NonNull
-    private String lastName;
-    @NonNull
-    private int age;
-    @NonNull
-    private Sex sex;
+    private final int id;
+    private final String firstName;
+    private final String lastName;
+    private final int age;
+    private final Sex sex;
     private Map<Subject, Integer> marks;
+
     public enum Sex {
         MALE,
         FEMALE;

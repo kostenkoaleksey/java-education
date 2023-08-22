@@ -1,14 +1,12 @@
 package streamapi;
 
-import lombok.*;
+import lombok.Data;
 
-import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class Group {
-    @NonNull
-    private int id;
-    @NonNull
-    private String title;
-    private HashSet<Student> students;
+    private final int id;
+    private final String title;
+    private Set<Student> students;
 }

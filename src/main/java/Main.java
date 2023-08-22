@@ -3,10 +3,7 @@ import streamapi.Group;
 import streamapi.Student;
 import streamapi.Subject;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -80,18 +77,20 @@ public class Main {
         System.out.println("\nList of all students in " + faculty.getTitle());
         university.stream()
                 .filter(f -> f.getTitle().equals(faculty.getTitle()))
-                .flatMap(f -> f.getGroups()
-                        .stream()
-                        .flatMap(g -> g.getStudents().stream()))
+                .map(Faculty::getGroups)
+                .flatMap(Collection::stream)
+                .map(Group::getStudents)
+                .flatMap(Collection::stream)
                 .sorted(Comparator.comparingInt(Student::getId))
                 .map(s -> s.getId() + ": " + s.getFirstName() + " " + s.getLastName())
                 .forEach(System.out::println);
 
         System.out.println("\nList of students of army draft age (age > 20)");
         university.stream()
-                .flatMap(f -> f.getGroups()
-                        .stream()
-                        .flatMap(g -> g.getStudents().stream()))
+                .map(Faculty::getGroups)
+                .flatMap(Collection::stream)
+                .map(Group::getStudents)
+                .flatMap(Collection::stream)
                 .filter(s -> s.getAge() >= 20)
                 .sorted(Comparator.comparingInt(Student::getAge))
                 .map(s -> s.getFirstName() + " " + s.getLastName() + " [" + s.getAge() + "]")
@@ -99,80 +98,61 @@ public class Main {
 
         System.out.println("\nList of subjects");
         university.stream()
-                .flatMap(f -> f.getGroups()
-                        .stream()
-                        .flatMap(g -> g.getStudents()
-                                .stream()
-                                .flatMap(s -> s.getMarks()
-                                        .keySet()
-                                        .stream()
-                                        .map(o -> o.getTitle())
-                                )
-                        )
-                )
+                .map(Faculty::getGroups)
+                .flatMap(Collection::stream)
+                .map(Group::getStudents)
+                .flatMap(Collection::stream)
+                .flatMap(s -> s.getMarks().keySet().stream())
+                .map(o -> o.getTitle())
                 .collect(Collectors.toSet())
                 .forEach(System.out::println);
 
         System.out.println("\nAverage mark per subject among all students");
         university.stream()
-                .flatMap(f -> f.getGroups()
+                .map(Faculty::getGroups)
+                .flatMap(Collection::stream)
+                .map(Group::getStudents)
+                .flatMap(Collection::stream)
+                .flatMap(s -> s.getMarks()
+                        .entrySet()
                         .stream()
-                        .flatMap(g -> g.getStudents()
-                                .stream()
-                                .flatMap(s -> s.getMarks()
-                                        .entrySet()
-                                        .stream()
-                                        .collect(Collectors.toMap(k -> k.getKey().getTitle(), v -> v.getValue()))
-                                        .entrySet()
-                                        .stream()
-                                )
-                        )
                 )
                 .collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.averagingDouble(Map.Entry::getValue)))
-                .forEach((s, m) -> System.out.println(s + " " + m));
+                .forEach((s, m) -> System.out.println(s.getTitle() + ": " + m));
 
         System.out.println("\nGroups average mark");
         university.stream()
-                .flatMap(f -> f.getGroups()
-                        .stream()
-                        .collect(
-                                Collectors.toMap(
-                                        Group::getTitle,
-                                        g -> g.getStudents()
-                                                .stream()
-                                                .flatMap(s -> s.getMarks()
-                                                        .values()
-                                                        .stream())
-                                                .collect(Collectors.averagingDouble(v -> v.doubleValue()))
-                                )
+                .map(Faculty::getGroups)
+                .flatMap(Collection::stream)
+                .collect(
+                        Collectors.toMap(
+                                Group::getTitle,
+                                g -> g.getStudents()
+                                        .stream()
+                                        .flatMap(s -> s.getMarks().values().stream())
+                                        .collect(Collectors.averagingDouble(Integer::doubleValue))
                         )
-                        .entrySet()
-                        .stream()
                 )
-                .sorted(Comparator.comparingDouble(Map.Entry::getValue))
-                .forEach(e -> System.out.println(e.getKey() + ": " + e.getValue()));
+                .forEach((e, v) -> System.out.println(e + ": " + v));
 
         System.out.println("\nGroups average mark by subjects");
         university.stream()
-                .flatMap(f -> f.getGroups()
-                        .stream()
-                        .collect(
-                                Collectors.toMap(
-                                        Group::getTitle,
-                                        g -> g.getStudents()
-                                                .stream()
-                                                .flatMap(s -> s.getMarks()
-                                                        .entrySet()
-                                                        .stream())
-                                                .collect(Collectors.groupingBy(
-                                                        Map.Entry::getKey,
-                                                        Collectors.averagingDouble(Map.Entry::getValue)
-                                                ))
-                                )
+                .map(Faculty::getGroups)
+                .flatMap(Collection::stream)
+                .collect(
+                        Collectors.toMap(
+                                Group::getTitle,
+                                g -> g.getStudents()
+                                        .stream()
+                                        .flatMap(s -> s.getMarks().entrySet().stream())
+                                        .collect(Collectors.groupingBy(
+                                                Map.Entry::getKey,
+                                                Collectors.averagingDouble(Map.Entry::getValue)
+                                        ))
                         )
-                        .entrySet()
-                        .stream()
                 )
+                .entrySet()/**/
+                .stream()
                 .collect(
                         Collectors.toMap(
                                 Map.Entry::getKey,
@@ -187,23 +167,27 @@ public class Main {
 
         System.out.println("\nGroups where male students prevails over female segment");
         university.stream()
-                .flatMap(f -> f.getGroups()
-                        .stream()
-                        .filter(g -> g.getStudents().stream().filter(s -> s.getSex() == Student.Sex.MALE).count() > g.getStudents().stream().filter(s -> s.getSex() == Student.Sex.FEMALE).count())
-
-                )
+                .map(Faculty::getGroups)
+                .flatMap(Collection::stream)
+                .filter(g -> checkMaleStudentsPrevailOverFemale(g))
                 .forEach(g -> System.out.println(g.getTitle()));
 
         System.out.println("\nFind all excellent students");
         university.stream()
-                .flatMap(f -> f.getGroups()
-                        .stream()
-                        .flatMap(g -> g.getStudents()
-                                .stream()
-                                .filter(s -> s.getMarks().entrySet().stream().allMatch(m -> m.getValue() == 5)))
-                )
+                .map(Faculty::getGroups)
+                .flatMap(Collection::stream)
+                .map(Group::getStudents)
+                .flatMap(Collection::stream)
+                .filter(s -> s.getMarks().entrySet().stream().allMatch(m -> m.getValue() == 5))
                 .sorted(Comparator.comparingInt(Student::getId))
                 .map(s -> s.getId() + ": " + s.getFirstName() + " " + s.getLastName() + " " + s.getMarks())
                 .forEach(System.out::println);
+    }
+
+    private static boolean checkMaleStudentsPrevailOverFemale(Group g) {
+        return g.getStudents()
+                .stream()
+                .filter(s -> s.getSex() == Student.Sex.MALE)
+                .count() > g.getStudents().stream().filter(s -> s.getSex() == Student.Sex.FEMALE).count();
     }
 }
