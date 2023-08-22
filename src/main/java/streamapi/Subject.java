@@ -1,12 +1,9 @@
 package streamapi;
 
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
 public class Subject {
-    @NonNull
-    private int id;
-    @NonNull
-    private String title;
+    private final int id;
+    private final String title;
 }
