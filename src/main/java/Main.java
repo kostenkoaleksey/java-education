@@ -1,4 +1,3 @@
-import streamapi.Faculty;
 import streamapi.Group;
 import streamapi.Student;
 import streamapi.UniversityService;
@@ -88,20 +87,41 @@ public class Main {
                     () -> universityService.getAllExcellentStudents()
             );
 
+            CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(
+                    listStudentsOfFaculty1,
+                    listStudentsOfArmyDraftAge,
+                    listSubjects,
+                    averageMarksPerSubject,
+                    groupsAverageMarks,
+                    groupsAverageMarksPerSubject,
+                    groupsWhereMaleStudentsPrevailOverFemale,
+                    listOfExcellentStudents
+            );
+
+            combinedFuture.get();
+
+
             System.out.println("\nList of all students in Faculty1");
             listStudentsOfFaculty1.get().forEach(s -> System.out.println(s.getId() + ": " + s.getFirstName() + " " + s.getLastName()));
+
             System.out.println("\nList of students of army draft age (age > 20)");
             listStudentsOfArmyDraftAge.get().forEach(s -> System.out.println(s.getFirstName() + " " + s.getLastName() + " [" + s.getAge() + "]"));
+
             System.out.println("\nList of subjects");
             listSubjects.get().forEach(System.out::println);
+
             System.out.println("\nAverage mark per subject among all students");
             averageMarksPerSubject.get().forEach((s, m) -> System.out.println(s + ": " + m));
+
             System.out.println("\nGroups average mark");
             groupsAverageMarks.get().forEach((e, v) -> System.out.println(e + ": " + v));
+
             System.out.println("\nGroups average mark by subjects");
             groupsAverageMarksPerSubject.get().forEach((k, v) -> System.out.println(k + ": " + v));
+
             System.out.println("\nGroups where male students prevails over female segment");
             groupsWhereMaleStudentsPrevailOverFemale.get().forEach(g -> System.out.println(g.getTitle()));
+
             System.out.println("\nFind all excellent students");
             listOfExcellentStudents.get().forEach(s -> System.out.println(s.getId() + ": " + s.getFirstName() + " " + s.getLastName() + " " + s.getMarks() + ": " + s.getAverageMark()));
 
